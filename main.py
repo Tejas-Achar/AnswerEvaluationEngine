@@ -18,6 +18,7 @@ app = Flask(__name__)
 
 nltk.download('wordnet')
 nltk.download('stopwords')
+nltk.download('punkt')
 
 @app.route('/',methods=["POST"])
 def GenerateWordCloudMain():
