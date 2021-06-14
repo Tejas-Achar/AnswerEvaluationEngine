@@ -1,0 +1,7 @@
+Flask==1.1.2
+nltk==3.5
+pyspellchecker==0.6.2
+wordcloud==1.8.1
+numpy==1.18.4
+Pillow==7.1.2
+requests==2.23.0
