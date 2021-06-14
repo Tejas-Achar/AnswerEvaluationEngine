@@ -195,4 +195,5 @@ def GenerateWordCloudMain():
 
     return merge_images("StudentAnswer.png", "ModelAnswer.png")
 
-app.run()
+if __name__ == '_main_':
+    app.run()
