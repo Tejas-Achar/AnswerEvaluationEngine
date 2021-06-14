@@ -126,7 +126,7 @@ def GenerateWordCloudMain():
 
     def create_word_cloud(Answer, AnswerType):
         # Use cloud image mask to outline words
-        maskArray = npy.array(Image.open("cloud.png"))
+        maskArray = npy.array(Image.open("cloud.PNG"))
         # configure cloud
         cloud = WordCloud(background_color="white", max_words=200, mask=maskArray)
         # generate cloud from input string
