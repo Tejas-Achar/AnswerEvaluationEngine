@@ -186,7 +186,7 @@ def GenerateWordCloudMain():
     StudentAnswerSynonyms = syn_checker(studentAnswerKeywords)
     print(StudentAnswerSynonyms)
 
-    finalStudentAnswerKeywords = StudentAnswerSynonyms + studentAnswerKeywords
+    finalStudentAnswerKeywords = StudentAnswerSynonyms
     print(finalStudentAnswerKeywords)
     finalStudentAnswerKeywords = ' '.join([str(elem) for elem in finalStudentAnswerKeywords])
     modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
