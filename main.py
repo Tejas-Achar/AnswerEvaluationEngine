@@ -190,8 +190,9 @@ def GenerateWordCloudMain():
     print(finalStudentAnswerKeywords)
     finalStudentAnswerKeywords = ' '.join([str(elem) for elem in finalStudentAnswerKeywords])
     modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
+    extraWords = list(set(finalStudentAnswerKeywords)-set(modelAnswerKeywords))+list(set(modelAnswerKeywords)-set(finalStudentAnswerKeywords))
     create_word_cloud(str(finalStudentAnswerKeywords), "StudentAnswer")
-    create_word_cloud(str(modelAnswerKeywords), "ModelAnswer")
+    create_word_cloud(str(extraWords), "ModelAnswer")
     print(str(finalStudentAnswerKeywords))
 
     return merge_images("StudentAnswer.png", "ModelAnswer.png")
