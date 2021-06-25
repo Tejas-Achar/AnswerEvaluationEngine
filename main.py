@@ -27,10 +27,11 @@ def GenerateWordCloudMain():
     spell = SpellChecker()
     Lem = WordNetLemmatizer()
 
-    Client_Id = "52291235847-0vhpv6309i1hbqtbf6n98mjsc3llhac4.apps.googleusercontent.com"
-    Client_Secret = "9BrCr7Or8wVvaWpDlNSkVqtG"
+    Client_Id = "1065772476833-02d56kvkapfcce1se62m1v2vhe6bnabi.apps.googleusercontent.com"
+    Client_Secret = "wZtMf8E7a1XD2WXfIT-SEWwl"
     Authurl = "https://oauth2.googleapis.com/token"
-    Refresh_token = "1//04UfuRL_YevjmCgYIARAAGAQSNwF-L9IrK7OzALaGDhb1rRpmMl7Z2nKXhHkJGlbRzD_9sFPvWKlx7dZGncBkOcMTigPGJG8kFBU"
+    Refresh_token = "1//04M6zq1t22YnUCgYIARAAGAQSNwF-L9Ird4Bpi4OpPigSMbum4sQ0ZWaiJ6Zp2TwPOtG7Fh1RfE3a1zfghubuAT0tnNWYlTvK1Yg"
+
 
     testString = AnswerData["student"]
     modelAnswer = AnswerData["model"]
