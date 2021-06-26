@@ -71,7 +71,7 @@ def GenerateWordCloudMain():
         Image_ID = Image_Data["id"]
         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
         print(Image_Url)
-        return Image_Url
+        return {"imgurl":Image_Url}
 
     def merge_images(file1, file2):
 
