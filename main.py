@@ -184,19 +184,31 @@ def GenerateWordCloudMain():
                     StudentAnswerAntonyms.append(j)
         return StudentAnswerAntonyms
 
+
     StudentAnswerSynonyms = syn_checker(studentAnswerKeywords)
     print(StudentAnswerSynonyms)
 
     finalStudentAnswerKeywords = StudentAnswerSynonyms
     print(finalStudentAnswerKeywords)
     finalStudentAnswerKeywords = ' '.join([str(elem) for elem in finalStudentAnswerKeywords])
-    modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
-    extraWords = list(set(finalStudentAnswerKeywords)-set(modelAnswerKeywords))+list(set(modelAnswerKeywords)-set(finalStudentAnswerKeywords))
+    # modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
+
+    extraWordsStudentAnswer = list((set(studentAnswerKeywords) - set(modelAnswerKeywords)))
+    extraWordsModelAnswer = list(set(modelAnswerKeywords) - set(studentAnswerKeywords))
+
+    extraWords = extraWordsStudentAnswer + extraWordsModelAnswer
+    print(studentAnswerKeywords)
+    print(modelAnswerKeywords)
+    print(str(extraWords))
+    extraWords = ' '.join([str(elem) for elem in extraWords])
     create_word_cloud(str(finalStudentAnswerKeywords), "StudentAnswer")
     create_word_cloud(str(extraWords), "ModelAnswer")
-    print(str(finalStudentAnswerKeywords))
+    # print(str(finalStudentAnswerKeywords))
+
+
 
     return merge_images("StudentAnswer.png", "ModelAnswer.png")
+    
 
 if __name__ == '_main_':
     app.run()
