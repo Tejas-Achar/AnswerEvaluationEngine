@@ -18,6 +18,7 @@ app = Flask(__name__)
 
 nltk.download('wordnet')
 nltk.download('stopwords')
+nltk.download('punkt')
 
 @app.route('/',methods=["POST"])
 def GenerateWordCloudMain():
@@ -31,6 +32,7 @@ def GenerateWordCloudMain():
     Authurl = "https://oauth2.googleapis.com/token"
     Refresh_token = "1//04M6zq1t22YnUCgYIARAAGAQSNwF-L9Ird4Bpi4OpPigSMbum4sQ0ZWaiJ6Zp2TwPOtG7Fh1RfE3a1zfghubuAT0tnNWYlTvK1Yg"
 
+
     testString = AnswerData["student"]
     modelAnswer = AnswerData["model"]
     def GetAuthToken():
@@ -43,7 +45,6 @@ def GenerateWordCloudMain():
         }
         response = requests.post(Authurl, headers=headers, json=data)
         respobj = response.json()
-        print("+++++++++++++++",respobj)
         accesstoken = respobj["access_token"]
         print(accesstoken)
         return accesstoken
@@ -70,7 +71,7 @@ def GenerateWordCloudMain():
         Image_ID = Image_Data["id"]
         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
         print(Image_Url)
-        return Image_Url
+        return {"imgurl":Image_Url}
 
     def merge_images(file1, file2):
 
@@ -126,7 +127,7 @@ def GenerateWordCloudMain():
 
     def create_word_cloud(Answer, AnswerType):
         # Use cloud image mask to outline words
-        maskArray = npy.array(Image.open("cloud.png"))
+        maskArray = npy.array(Image.open("cloud.PNG"))
         # configure cloud
         cloud = WordCloud(background_color="white", max_words=200, mask=maskArray)
         # generate cloud from input string
@@ -189,21 +190,11 @@ def GenerateWordCloudMain():
     finalStudentAnswerKeywords = StudentAnswerSynonyms
     print(finalStudentAnswerKeywords)
     finalStudentAnswerKeywords = ' '.join([str(elem) for elem in finalStudentAnswerKeywords])
-    # modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
-
-    extraWordsStudentAnswer = list((set(studentAnswerKeywords) - set(modelAnswerKeywords)))
-    extraWordsModelAnswer = list(set(modelAnswerKeywords) - set(studentAnswerKeywords))
-
-    extraWords = extraWordsStudentAnswer + extraWordsModelAnswer
-    print(studentAnswerKeywords)
-    print(modelAnswerKeywords)
-    print(str(extraWords))
-    extraWords = ' '.join([str(elem) for elem in extraWords])
+    modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
+    extraWords = list(set(finalStudentAnswerKeywords)-set(modelAnswerKeywords))+list(set(modelAnswerKeywords)-set(finalStudentAnswerKeywords))
     create_word_cloud(str(finalStudentAnswerKeywords), "StudentAnswer")
     create_word_cloud(str(extraWords), "ModelAnswer")
-    # print(str(finalStudentAnswerKeywords))
-
-
+    print(str(finalStudentAnswerKeywords))
 
     return merge_images("StudentAnswer.png", "ModelAnswer.png")
 
