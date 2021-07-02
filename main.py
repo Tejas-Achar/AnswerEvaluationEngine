@@ -92,7 +92,25 @@ def GenerateWordCloudMain():
         os.remove(file2)
 
         return UploadFile("test.png")
+    
+    def merge_images_top_bottom(file1, file2, cloud_type):
 
+        image1 = Image.open(file1)
+        image2 = Image.open(file2)
+
+        (width1, height1) = image1.size
+        (width2, height2) = image2.size
+
+        result_width = max(width1, width2)
+        result_height = height1 + height2
+
+        result = Image.new('RGB', (result_width, result_height))
+        result.paste(im=image1, box=(0, 0))
+        result.paste(im=image2, box=(0, height1))
+        result.save(cloud_type + ".png")
+        os.remove(file1)
+        os.remove(file2)
+        
     def Process_Text(texttoprocess):
         LematizedWords = []
         testString = re.sub(r'[^\w\s]', '', texttoprocess)
@@ -125,15 +143,18 @@ def GenerateWordCloudMain():
     # print(modelAnswerKeywords)
     # print(studentAnswerKeywords)
 
-    def create_word_cloud(Answer, AnswerType):
+    def create_word_cloud(Answer, AnswerType, color, image_type):
         # Use cloud image mask to outline words
-        maskArray = npy.array(Image.open("cloud.PNG"))
+        maskArray = npy.array(Image.open(image_type))
         # configure cloud
-        cloud = WordCloud(background_color="white", max_words=200, mask=maskArray)
+        cloud = WordCloud(background_color="white", color_func=lambda *args, **kwargs: color, max_words=200,
+                          mask=maskArray, stopwords=set(STOPWORDS))
         # generate cloud from input string
         cloud.generate(Answer)
         # save file as .png image
         cloud.to_file(AnswerType + ".png")
+
+
 
     def syn_gen(AnswerWord):
         syn = []
@@ -192,22 +213,28 @@ def GenerateWordCloudMain():
     print(finalStudentAnswerKeywords)
     finalStudentAnswerKeywords = ' '.join([str(elem) for elem in finalStudentAnswerKeywords])
     # modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
-
     extraWordsStudentAnswer = list((set(studentAnswerKeywords) - set(modelAnswerKeywords)))
     extraWordsModelAnswer = list(set(modelAnswerKeywords) - set(studentAnswerKeywords))
+
+    extraWordsStudentAnswer = ' '.join([str(elem) for elem in extraWordsStudentAnswer])
+    extraWordsModelAnswer = ' '.join([str(elem) for elem in extraWordsModelAnswer])
 
     extraWords = extraWordsStudentAnswer + extraWordsModelAnswer
     print(studentAnswerKeywords)
     print(modelAnswerKeywords)
     print(str(extraWords))
     extraWords = ' '.join([str(elem) for elem in extraWords])
-    create_word_cloud(str(finalStudentAnswerKeywords), "StudentAnswer")
-    create_word_cloud(str(extraWords), "ModelAnswer")
+    create_word_cloud(str(extraWordsStudentAnswer), "topUncommon", "blue", "cloud_top.PNG")
+    create_word_cloud(str(extraWordsModelAnswer), "bottomUncommon", "purple", "cloud_bottom.PNG")
+    merge_images_top_bottom("topUncommon.png", "bottomUncommon.png", "uncommon")
+
+    # generate Common keywords
+    create_word_cloud(str(finalStudentAnswerKeywords), "common", "red", "cloud.PNG")
     # print(str(finalStudentAnswerKeywords))
 
 
 
-    return merge_images("StudentAnswer.png", "ModelAnswer.png")
+    return merge_images("common.png", "uncommon.png")
     
 
 if __name__ == '_main_':
