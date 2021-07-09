@@ -73,7 +73,8 @@ def GenerateWordCloudMain():
         Image_ID = Image_Data["id"]
         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
         print(Image_Url)
-        return Image_Url
+        StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentAnswerKeywords, Max_Score)
+        return {"url":Image_Url,"score":StudentScore}
 
     def merge_images_top_bottom(file1, file2, cloud_type):
 
@@ -110,8 +111,8 @@ def GenerateWordCloudMain():
         result.save("test.png")
         os.remove(file1)
         os.remove(file2)
-        return calculate_score(questionKeywords, modelAnswerKeywords, studentAnswerKeywords, Max_Score)
-        # return UploadFile("test.png")
+
+        return UploadFile("test.png")
 
     def Process_Text(texttoprocess):
         LematizedWords = []
@@ -222,8 +223,7 @@ def GenerateWordCloudMain():
         if studentscore >= maxscore:
             studentscore = maxscore
         print("Student Score : ", studentscore)
-        url =  UploadFile("test.png")
-        return {"url":url,"Studentscore":studentscore}
+        return studentscore
 
     StudentAnswerSynonyms = syn_checker(studentAnswerKeywords)
     print(StudentAnswerSynonyms)
@@ -263,9 +263,7 @@ def GenerateWordCloudMain():
     # generate Common keywords
     create_word_cloud(str(finalStudentAnswerKeywords), "common", "red", "cloud.PNG")
 
-    print(")_)_)__)", studentkeywords)
-    StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentAnswerKeywords, 3)
-    print(StudentScore)
+   
 
 
 
