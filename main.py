@@ -32,9 +32,10 @@ def GenerateWordCloudMain():
     Authurl = "https://oauth2.googleapis.com/token"
     Refresh_token = "1//04MlCRfTiHvZXCgYIARAAGAQSNwF-L9Ir9618O7LxsfuvOPwajzTxRB7RWpVOPp5dnQ_cPmigCRuGPnMNfHfClYduvP_kYgRKP8w"
 
-
     testString = AnswerData["student"]
     modelAnswer = AnswerData["model"]
+    Question = AnswerData["question"]
+    Max_Score = AnswerData["maxmarks"]
     def GetAuthToken():
         headers = {'Content-type': 'application/json'}
         data = {
@@ -45,6 +46,7 @@ def GenerateWordCloudMain():
         }
         response = requests.post(Authurl, headers=headers, json=data)
         respobj = response.json()
+        print("+++++++++++++++",respobj)
         accesstoken = respobj["access_token"]
         print(accesstoken)
         return accesstoken
@@ -73,26 +75,6 @@ def GenerateWordCloudMain():
         print(Image_Url)
         return Image_Url
 
-    def merge_images(file1, file2):
-
-        image1 = Image.open(file1)
-        image2 = Image.open(file2)
-
-        (width1, height1) = image1.size
-        (width2, height2) = image2.size
-
-        result_width = width1 + width2
-        result_height = max(height1, height2)
-
-        result = Image.new('RGB', (result_width, result_height))
-        result.paste(im=image1, box=(0, 0))
-        result.paste(im=image2, box=(width1, 0))
-        result.save("test.png")
-        os.remove(file1)
-        os.remove(file2)
-
-        return UploadFile("test.png")
-    
     def merge_images_top_bottom(file1, file2, cloud_type):
 
         image1 = Image.open(file1)
@@ -110,7 +92,27 @@ def GenerateWordCloudMain():
         result.save(cloud_type + ".png")
         os.remove(file1)
         os.remove(file2)
-        
+
+    def merge_images(file1, file2):
+
+        image1 = Image.open(file1)
+        image2 = Image.open(file2)
+
+        (width1, height1) = image1.size
+        (width2, height2) = image2.size
+
+        result_width = width1 + width2
+        result_height = max(height1, height2)
+
+        result = Image.new('RGB', (result_width, result_height))
+        result.paste(im=image1, box=(0, 0))
+        result.paste(im=image2, box=(width1, 0))
+        result.save("test.png")
+        os.remove(file1)
+        os.remove(file2)
+        return calculate_score(questionKeywords, modelAnswerKeywords, studentAnswerKeywords, Max_Score)
+        # return UploadFile("test.png")
+
     def Process_Text(texttoprocess):
         LematizedWords = []
         testString = re.sub(r'[^\w\s]', '', texttoprocess)
@@ -139,7 +141,8 @@ def GenerateWordCloudMain():
 
     studentAnswerKeywords = Process_Text(testString)
     modelAnswerKeywords = Process_Text(modelAnswer)
-
+    questionKeywords = Process_Text(Question)
+    uniqueKeywords = list(set(modelAnswerKeywords) - set(questionKeywords))
     # print(modelAnswerKeywords)
     # print(studentAnswerKeywords)
 
@@ -186,9 +189,9 @@ def GenerateWordCloudMain():
         for i in synlist:
             for j in i:
                 # print(j)
-                if j in modelAnswerKeywords:
+                if j in uniqueKeywords:
                     print(j)
-                    StudentAnswerSynonyms.append(str(j) + "-" + i[0])
+                    StudentAnswerSynonyms.append(str(j))
         return StudentAnswerSynonyms
 
     def ant_checker(AnswerList):
@@ -205,32 +208,64 @@ def GenerateWordCloudMain():
                     StudentAnswerAntonyms.append(j)
         return StudentAnswerAntonyms
 
+    def calculate_score(question, modelanswer, studentanswer, maxscore):
+        uniquekeys = list(set(modelanswer) - set(question))
+
+        print("Unique Keywords : ", uniquekeys)
+        scoreperkeyword = maxscore / len(uniquekeys)
+        if scoreperkeyword <= 0.1:
+            scoreperkeyword = 0.1
+        print("Score Per Keyword : ", scoreperkeyword)
+        studentkeywords = list(set(uniquekeys).intersection(set(studentanswer)))
+        print("student Answer : ", studentkeywords)
+        studentscore = len(studentkeywords) * scoreperkeyword
+        if studentscore >= maxscore:
+            studentscore = maxscore
+        print("Student Score : ", studentscore)
+        url =  UploadFile("test.png")
+        return {"url":url,"Studentscore":studentscore}
 
     StudentAnswerSynonyms = syn_checker(studentAnswerKeywords)
     print(StudentAnswerSynonyms)
+    studentkeywords = list(set(uniqueKeywords).intersection(set(studentAnswerKeywords)))
+    studentkeywords = list(set(studentkeywords + StudentAnswerSynonyms))
 
-    finalStudentAnswerKeywords = StudentAnswerSynonyms
-    print(finalStudentAnswerKeywords)
-    finalStudentAnswerKeywords = ' '.join([str(elem) for elem in finalStudentAnswerKeywords])
+    finalStudentAnswerKeywords = ' '.join([str(elem) for elem in studentkeywords])
     # modelAnswerKeywords = ' '.join([str(elem) for elem in modelAnswerKeywords])
-    extraWordsStudentAnswer = list((set(studentAnswerKeywords) - set(modelAnswerKeywords)))
+
+    extraWordsStudentAnswer = list(set(studentAnswerKeywords) - set(modelAnswerKeywords))
     extraWordsModelAnswer = list(set(modelAnswerKeywords) - set(studentAnswerKeywords))
 
     extraWordsStudentAnswer = ' '.join([str(elem) for elem in extraWordsStudentAnswer])
     extraWordsModelAnswer = ' '.join([str(elem) for elem in extraWordsModelAnswer])
+
+    commonModelAnswerKeywords = list(set(modelAnswerKeywords) - set(extraWordsModelAnswer))
+    commonModelAnswerKeywords = ' '.join([str(elem) for elem in commonModelAnswerKeywords])
 
     extraWords = extraWordsStudentAnswer + extraWordsModelAnswer
     print(studentAnswerKeywords)
     print(modelAnswerKeywords)
     print(str(extraWords))
     extraWords = ' '.join([str(elem) for elem in extraWords])
-    create_word_cloud(str(extraWordsStudentAnswer), "topUncommon", "blue", "cloud_top.PNG")
-    create_word_cloud(str(extraWordsModelAnswer), "bottomUncommon", "purple", "cloud_bottom.PNG")
+
+    # generate unCommon keywords
+    if len(extraWordsStudentAnswer) != 0:
+        create_word_cloud(str(extraWordsStudentAnswer), "topUncommon", "blue", "cloud_top.PNG")
+    else:
+        create_word_cloud("No Extra words in Student Answer", "topUncommon", "blue", "cloud_top.PNG")
+    if len(extraWordsModelAnswer) != 0:
+        create_word_cloud(str(extraWordsModelAnswer), "bottomUncommon", "purple", "cloud_bottom.PNG")
+    else:
+        create_word_cloud("No Extra words in Model answer", "bottomUncommon", "purple", "cloud_bottom.PNG")
+
     merge_images_top_bottom("topUncommon.png", "bottomUncommon.png", "uncommon")
 
     # generate Common keywords
     create_word_cloud(str(finalStudentAnswerKeywords), "common", "red", "cloud.PNG")
-    # print(str(finalStudentAnswerKeywords))
+
+    print(")_)_)__)", studentkeywords)
+    StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentAnswerKeywords, 3)
+    print(StudentScore)
 
 
 
