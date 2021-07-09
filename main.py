@@ -261,7 +261,7 @@ def GenerateWordCloudMain():
     merge_images_top_bottom("topUncommon.png", "bottomUncommon.png", "uncommon")
 
     # generate Common keywords
-    if len(finalStudentAnswerKeywords) != 0:
+    if len(finalStudentAnswerKeywords) != 0 and str(finalStudentAnswerKeywords) !="The":
         create_word_cloud(str(finalStudentAnswerKeywords), "common", "red", "cloud.PNG")
     else:
         create_word_cloud("No_Common_Keywords_In_model_And_Student_Answer", "common", "red", "cloud.PNG")
