@@ -73,7 +73,7 @@ def GenerateWordCloudMain():
         Image_ID = Image_Data["id"]
         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
         print(Image_Url)
-        StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentAnswerKeywords, Max_Score)
+        StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentkeywords, Max_Score)
         return {"url":Image_Url,"score":StudentScore}
 
     def merge_images_top_bottom(file1, file2, cloud_type):
