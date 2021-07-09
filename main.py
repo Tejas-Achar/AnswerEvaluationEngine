@@ -252,11 +252,11 @@ def GenerateWordCloudMain():
     if len(extraWordsStudentAnswer) != 0:
         create_word_cloud(str(extraWordsStudentAnswer), "topUncommon", "blue", "cloud_top.PNG")
     else:
-        create_word_cloud("No Extra words in Student Answer", "topUncommon", "blue", "cloud_top.PNG")
+        create_word_cloud("No_Extra_words_in_Student_Answer", "topUncommon", "blue", "cloud_top.PNG")
     if len(extraWordsModelAnswer) != 0:
         create_word_cloud(str(extraWordsModelAnswer), "bottomUncommon", "purple", "cloud_bottom.PNG")
     else:
-        create_word_cloud("No Extra words in Model answer", "bottomUncommon", "purple", "cloud_bottom.PNG")
+        create_word_cloud("No_Extra_words_in_Model_answer", "bottomUncommon", "purple", "cloud_bottom.PNG")
 
     merge_images_top_bottom("topUncommon.png", "bottomUncommon.png", "uncommon")
 
