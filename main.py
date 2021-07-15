@@ -19,24 +19,11 @@ app = Flask(__name__)
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
-
-@app.route('/',methods=["POST"])
-def GenerateWordCloudMain():
-
-    AnswerData = request.get_json()
-    spell = SpellChecker()
-    Lem = WordNetLemmatizer()
-
-    Client_Id = "820437004066-e9ld6ovur1s32563hlj7ts38445027eb.apps.googleusercontent.com"
-    Client_Secret = "lckoV_S1YuSvxI72MpOgeO88"
-    Authurl = "https://oauth2.googleapis.com/token"
-    Refresh_token = "1//04MlCRfTiHvZXCgYIARAAGAQSNwF-L9Ir9618O7LxsfuvOPwajzTxRB7RWpVOPp5dnQ_cPmigCRuGPnMNfHfClYduvP_kYgRKP8w"
-
-    testString = AnswerData["student"]
-    modelAnswer = AnswerData["model"]
-    Question = AnswerData["question"]
-    Max_Score = AnswerData["maxmarks"]
-    def GetAuthToken():
+Client_Id = "935304335286-fi84j6520v4c6p5nj6qog9s2oiusf8sq.apps.googleusercontent.com"
+Client_Secret = "rrOxRjiej0aKeXAum83jVekp"
+Authurl = "https://oauth2.googleapis.com/token"
+Refresh_token = "1//04a9jO0Rg5cplCgYIARAAGAQSNwF-L9IrBYF1MVPT45HVds_cq7wt7B3iyJdY1Bs46QJO1OexbcsrkhQfxZgc7-akxO5b_9wzPbA"
+def GetAuthToken():
         headers = {'Content-type': 'application/json'}
         data = {
             "client_id": Client_Id,
@@ -50,11 +37,27 @@ def GenerateWordCloudMain():
         accesstoken = respobj["access_token"]
         print(accesstoken)
         return accesstoken
+access_Token = GetAuthToken()
+
+@app.route('/',methods=["POST"])
+def GenerateWordCloudMain():
+
+    AnswerData = request.get_json()
+    spell = SpellChecker()
+    Lem = WordNetLemmatizer()
+
+
+
+    testString = AnswerData["student"]
+    modelAnswer = AnswerData["model"]
+    Question = AnswerData["question"]
+    Max_Score = AnswerData["maxmarks"]
+
 
     def UploadFile(filename):
-        access_token = GetAuthToken()
+        
         headers = {
-            "Authorization": "Bearer " + access_token}
+            "Authorization": "Bearer " + access_Token}
         para = {
             "name": filename,
             "parents": ["1iO5xkV3CDoEGrfvL3toFYg3tZDzj0S-z"]
