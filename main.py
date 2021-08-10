@@ -19,10 +19,12 @@ app = Flask(__name__)
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
-Client_Id = "935304335286-fi84j6520v4c6p5nj6qog9s2oiusf8sq.apps.googleusercontent.com"
-Client_Secret = "rrOxRjiej0aKeXAum83jVekp"
+
+Client_Id = "580646922510-vjmv760360l0imile1baj208jrkje56m.apps.googleusercontent.com"
+Client_Secret = "J3_v9isariWKBNGnADa9c8xD"
 Authurl = "https://oauth2.googleapis.com/token"
-Refresh_token = "1//04a9jO0Rg5cplCgYIARAAGAQSNwF-L9IrBYF1MVPT45HVds_cq7wt7B3iyJdY1Bs46QJO1OexbcsrkhQfxZgc7-akxO5b_9wzPbA"
+Refresh_token = "1//04oosHgOdVS_dCgYIARAAGAQSNwF-L9IrUEAfQwOt0UBSynV5bmrebpDHwDziIezYlG1an0gG_uH_eKIrN5B9oBHRsNCLl9NkX3U"
+
 def GetAuthToken():
         headers = {'Content-type': 'application/json'}
         data = {
