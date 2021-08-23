@@ -20,10 +20,10 @@ nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
 
-Client_Id = "580646922510-vjmv760360l0imile1baj208jrkje56m.apps.googleusercontent.com"
-Client_Secret = "J3_v9isariWKBNGnADa9c8xD"
+Client_Id = "910583064373-um8i0237aansbve87i42slvats7r7tq4.apps.googleusercontent.com"
+Client_Secret = "LSuv10Ccd38CLx8HntedckLK"
 Authurl = "https://oauth2.googleapis.com/token"
-Refresh_token = "1//04oosHgOdVS_dCgYIARAAGAQSNwF-L9IrUEAfQwOt0UBSynV5bmrebpDHwDziIezYlG1an0gG_uH_eKIrN5B9oBHRsNCLl9NkX3U"
+Refresh_token = "1//04g8joNd3XvCXCgYIARAAGAQSNwF-L9IrLnlyVLN0q8KDB0YYBKTg6a6JPSMSQr4z2eJH0a1ypP8KjSuUthpqZ1moiAQWBbL1tUw"
 
 def GetAuthToken():
         headers = {'Content-type': 'application/json'}
