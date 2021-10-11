@@ -31,7 +31,7 @@ def GetAuthToken():
             "client_id": Client_Id,
             "client_secret": Client_Secret,
             "refresh_token": Refresh_token,
-            "grant_type": "refresh_token"
+            "grant_type": "access_token"
         }
         response = requests.post(Authurl, headers=headers, json=data)
         respobj = response.json()
