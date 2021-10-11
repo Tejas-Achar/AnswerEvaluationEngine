@@ -12,8 +12,11 @@ import json
 import requests
 import os
 import nltk
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 nltk.download('wordnet')
@@ -42,6 +45,7 @@ def GetAuthToken():
 access_Token = GetAuthToken()
 
 @app.route('/',methods=["POST"])
+@cross_origin()
 def GenerateWordCloudMain():
 
     AnswerData = request.get_json()
@@ -79,7 +83,10 @@ def GenerateWordCloudMain():
         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
         print(Image_Url)
         StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentkeywords, Max_Score)
-        return {"url":Image_Url,"score":StudentScore}
+        responseObject = {"url":Image_Url,"score":StudentScore}
+  
+        
+        return responseObject
 
     def merge_images_top_bottom(file1, file2, cloud_type):
 
