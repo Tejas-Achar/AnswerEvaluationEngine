@@ -1,4 +1,5 @@
 from flask import Flask, request
+import flask
 import re
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
