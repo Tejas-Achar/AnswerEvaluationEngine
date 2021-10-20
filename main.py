@@ -69,7 +69,7 @@ def GenerateWordCloudMain():
         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
         print(Image_Url)
         StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentkeywords, Max_Score)
-        res = {"url":Image_Url,"score":StudentScore}
+        res = flask.jsonify({"url":Image_Url,"score":StudentScore})
         res.headers.add('Access-Control-Allow-Origin', '*')
         return res
     def merge_images_top_bottom(file1, file2, cloud_type):
