@@ -13,6 +13,9 @@ import json
 import requests
 import os
 import nltk
+from flask_cors import cross_origin
+
+
 app = Flask(__name__)
 nltk.download('wordnet')
 nltk.download('stopwords')
@@ -38,7 +41,9 @@ def GetAuthToken():
         print(accesstoken)
         return accesstoken
 access_Token = GetAuthToken()
+
 @app.route('/',methods=["POST"])
+@cross_origin()
 def GenerateWordCloudMain():
     AnswerData = request.get_json()
     spell = SpellChecker()
