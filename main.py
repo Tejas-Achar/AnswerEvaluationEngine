@@ -13,10 +13,11 @@ import json
 import requests
 import os
 import nltk
-from flask_cors import cross_origin
+from flask_cors import cross_origin, CORS
 
 
 app = Flask(__name__)
+CORS(app)
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
