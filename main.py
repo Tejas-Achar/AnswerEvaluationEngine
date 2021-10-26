@@ -43,7 +43,7 @@ def GetAuthToken():
 access_Token = GetAuthToken()
 
 @app.route('/',methods=["POST"])
-@cross_origin()
+@cross_origin(origin='*')
 def GenerateWordCloudMain():
     AnswerData = request.get_json()
     spell = SpellChecker()
