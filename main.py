@@ -78,7 +78,7 @@ def GenerateWordCloudMain():
 #         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
 #         print(Image_Url)
         StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentkeywords, Max_Score)
-        res = flask.jsonify({"url":filename,"score":StudentScore})
+        res = flask.jsonify({"url":"https://answer-evaluation-engine.herokuapp.com"+filename,"score":StudentScore})
         #res.headers.add('Access-Control-Allow-Origin', '*')
         #res.headers.add("Access-Control-Allow-Headers", "X-Requested-With")
         return res
