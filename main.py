@@ -21,27 +21,27 @@ CORS(app)
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
-Client_Id = "521049905005-ql6rv7c0csmni3tl9ltb01kpbk9t9lnr.apps.googleusercontent.com"
-Client_Secret = "yZSW5ILtoy9B2HNat08bNuwr"
-Authurl = "https://oauth2.googleapis.com/token"
-Refresh_token = "1//04ztLeUz3XJDDCgYIARAAGAQSNwF-L9Ir3dvZph5zVmXzAEe1tWZFdvmGPlA6K1r30KV-yBYBZjeB5qR4WrQiCJJRJPCmC2fsTno"
+# Client_Id = "521049905005-ql6rv7c0csmni3tl9ltb01kpbk9t9lnr.apps.googleusercontent.com"
+# Client_Secret = "yZSW5ILtoy9B2HNat08bNuwr"
+# Authurl = "https://oauth2.googleapis.com/token"
+# Refresh_token = "1//04ztLeUz3XJDDCgYIARAAGAQSNwF-L9Ir3dvZph5zVmXzAEe1tWZFdvmGPlA6K1r30KV-yBYBZjeB5qR4WrQiCJJRJPCmC2fsTno"
 
 
-def GetAuthToken():
-        headers = {'Content-type': 'application/json'}
-        data = {
-            "client_id": Client_Id,
-            "client_secret": Client_Secret,
-            "refresh_token": Refresh_token,
-            "grant_type": "refresh_token"
-        }
-        response = requests.post(Authurl, headers=headers, json=data)
-        respobj = response.json()
-        print("+++++++++++++++",respobj)
-        accesstoken = respobj["access_token"]
-        print(accesstoken)
-        return accesstoken
-access_Token = GetAuthToken()
+# def GetAuthToken():
+#         headers = {'Content-type': 'application/json'}
+#         data = {
+#             "client_id": Client_Id,
+#             "client_secret": Client_Secret,
+#             "refresh_token": Refresh_token,
+#             "grant_type": "refresh_token"
+#         }
+#         response = requests.post(Authurl, headers=headers, json=data)
+#         respobj = response.json()
+#         print("+++++++++++++++",respobj)
+#         accesstoken = respobj["access_token"]
+#         print(accesstoken)
+#         return accesstoken
+# access_Token = GetAuthToken()
 
 @app.route('/',methods=["POST"])
 @cross_origin(origin='*')
@@ -57,28 +57,28 @@ def GenerateWordCloudMain():
         
     def UploadFile(filename):
         
-        headers = {
-            "Authorization": "Bearer " + access_Token}
-        para = {
-            "name": filename,
-            "parents": ["1iO5xkV3CDoEGrfvL3toFYg3tZDzj0S-z"]
-        }
-        files = {
-            'data': ('metadata', json.dumps(para), 'application/json; charset=UTF-8'),
-            'file': open("./" + filename, "rb")
-        }
-        r = requests.post(
-            "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
-            headers=headers,
-            files=files
-        )
-        Image_Data = r.json()
-        print(r.text)
-        Image_ID = Image_Data["id"]
-        Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
-        print(Image_Url)
+#         headers = {
+#             "Authorization": "Bearer " + access_Token}
+#         para = {
+#             "name": filename,
+#             "parents": ["1iO5xkV3CDoEGrfvL3toFYg3tZDzj0S-z"]
+#         }
+#         files = {
+#             'data': ('metadata', json.dumps(para), 'application/json; charset=UTF-8'),
+#             'file': open("./" + filename, "rb")
+#         }
+#         r = requests.post(
+#             "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+#             headers=headers,
+#             files=files
+#         )
+#         Image_Data = r.json()
+#         print(r.text)
+#         Image_ID = Image_Data["id"]
+#         Image_Url = "https://drive.google.com/uc?export=view&id=" + str(Image_ID)
+#         print(Image_Url)
         StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentkeywords, Max_Score)
-        res = flask.jsonify({"url":Image_Url,"score":StudentScore})
+        res = flask.jsonify({"url":filename,"score":StudentScore})
         #res.headers.add('Access-Control-Allow-Origin', '*')
         #res.headers.add("Access-Control-Allow-Headers", "X-Requested-With")
         return res
@@ -95,6 +95,7 @@ def GenerateWordCloudMain():
         result.save(cloud_type + ".png")
         os.remove(file1)
         os.remove(file2)
+        
     def merge_images(file1, file2):
         image1 = Image.open(file1)
         image2 = Image.open(file2)
@@ -106,9 +107,11 @@ def GenerateWordCloudMain():
         result.paste(im=image1, box=(0, 0))
         result.paste(im=image2, box=(width1, 0))
         result.save("test.png")
+        os.rename("test.png","./static/test.png")
         os.remove(file1)
         os.remove(file2)
-        return UploadFile("test.png")
+        return UploadFile(url_for('static',filename='test.png'))
+
     def Process_Text(texttoprocess):
         LematizedWords = []
         testString = re.sub(r'[^\w\s]', '', texttoprocess)
