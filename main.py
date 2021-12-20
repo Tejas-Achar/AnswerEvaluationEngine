@@ -117,13 +117,14 @@ def GenerateWordCloudMain():
 
         StudentScore = calculate_score(questionKeywords, modelAnswerKeywords, studentkeywords, Max_Score)
         i1.text((28, 65),"Score : "+str(StudentScore)+" / "+str(Max_Score),fill=(0,0,0))
-        Final_image.save("test1.png")
-        if os.path.exists('./static/test1.png'):
-            os.remove("./static/test1.png")
-        os.rename("test1.png","./static/test1.png")
+        uniquefilename = "result" + str(random.randrange(0,100000,1)) + ".png"
+        Final_image.save(uniquefilename)
+        if os.path.exists('./static/'+uniquefilename):
+            os.remove("./static/"+uniquefilename)
+        os.rename(uniquefilename,"./static/"+uniquefilename)
         os.remove(file1)
         os.remove(file2)
-        return UploadFile(url_for('static',filename='test1.png'),StudentScore)
+        return UploadFile(url_for('static',filename=uniquefilename),StudentScore)
 
     def Process_Text(texttoprocess):
         LematizedWords = []
