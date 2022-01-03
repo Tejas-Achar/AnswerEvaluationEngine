@@ -56,7 +56,7 @@ def GenerateWordCloudMain():
     modelAnswer = AnswerData["model"]
     Question = AnswerData["question"]
     Max_Score = AnswerData["maxmarks"]
-    Score_Per_word = int(AnswerData["score_per_word"])
+    Score_Per_word = AnswerData["score_per_word"]
 
 
     def UploadFile(filename,StudentScore):
