@@ -220,14 +220,14 @@ def GenerateWordCloudMain():
         print("Unique Keywords : ", uniquekeys)
         # scoreperkeyword = maxscore / len(uniquekeys)
         scoreperkeyword = Score_Per_word
-        if scoreperkeyword <= 0.1:
+        if scoreperkeyword < 0.1:
             scoreperkeyword = 0.1
         print("Score Per Keyword : ", scoreperkeyword)
         studentkeywords = list(set(uniquekeys).intersection(set(studentanswer)))
         print("student Answer : ", studentkeywords)
         global studentscore
         studentscore = len(studentkeywords) * scoreperkeyword
-        if studentscore >= maxscore:
+        if studentscore > maxscore:
             studentscore = maxscore
         print("Student Score : ", studentscore)
         return format(studentscore, ".1f")
