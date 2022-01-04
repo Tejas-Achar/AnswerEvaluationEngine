@@ -56,7 +56,9 @@ def GenerateWordCloudMain():
     modelAnswer = AnswerData["model"]
     Question = AnswerData["question"]
     Max_Score = AnswerData["maxmarks"]
-    Score_Per_word = AnswerData["score_per_word"]
+    Keywords_in_Model = AnswerData["keywords"]
+    Score_Per_word = AnswerData["scores"]
+    ev_criteria = dict(zip(Keywords_in_Model,Score_Per_word))
 
 
     def UploadFile(filename,StudentScore):
@@ -216,20 +218,17 @@ def GenerateWordCloudMain():
         return StudentAnswerAntonyms
 
     def calculate_score(question, modelanswer, studentanswer, maxscore):
+        studentscore = 0
         uniquekeys = list(set(modelanswer) - set(question))
-        print("Unique Keywords : ", uniquekeys)
-        # scoreperkeyword = maxscore / len(uniquekeys)
-        scoreperkeyword = Score_Per_word
-        if scoreperkeyword < 0.1:
-            scoreperkeyword = 0.1
-        print("Score Per Keyword : ", scoreperkeyword)
-        studentkeywords = list(set(uniquekeys).intersection(set(studentanswer)))
-        print("student Answer : ", studentkeywords)
-        global studentscore
-        studentscore = len(studentkeywords) * scoreperkeyword
-        if studentscore > maxscore:
-            studentscore = maxscore
-        print("Student Score : ", studentscore)
+
+        for i in ev_criteria:
+            if i in studentanswer:
+                studentscore = studentscore + ev_criteria[i]
+            else:
+                studentscore = studentscore + 0
+            if studentscore > maxscore:
+                studentscore = maxscore
+
         return format(studentscore, ".1f")
 
     StudentAnswerSynonyms = syn_checker(studentAnswerKeywords)
