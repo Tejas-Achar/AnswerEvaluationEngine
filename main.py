@@ -50,6 +50,7 @@ nltk.download('punkt')
 @cross_origin(origin='*')
 def GenerateWordCloudMain():
     AnswerData = request.get_json()
+    print(AnswerData)
     spell = SpellChecker()
     Lem = WordNetLemmatizer()
     testString = AnswerData["student"]
